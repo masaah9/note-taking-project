@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import NoteDetail from './NoteDetail';
+// Other imports
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    const [selectedNoteId, setSelectedNoteId] = useState(null);
+    const [view, setView] = useState('list'); // or 'detail'
+
+    const handleBack = () => {
+        setView('list'); // Go back to the note list
+    };
+
+    const handleViewHistory = () => {
+        setView('history'); // Switch to version history view
+    };
+
+    return (
+        <div>
+            {view === 'list' && (
+                <NotesList onSelectNote={setSelectedNoteId} onViewDetail={() => setView('detail')} />
+            )}
+            {view === 'detail' && selectedNoteId && (
+                <NoteDetail
+                    noteId={selectedNoteId}
+                    onBack={handleBack}
+                    onViewHistory={() => setView('history')}
+                />
+            )}
+            {view === 'history' && selectedNoteId && (
+                <VersionHistory noteId={selectedNoteId} onBack={handleBack} />
+            )}
+        </div>
+    );
+};
 
 export default App;
